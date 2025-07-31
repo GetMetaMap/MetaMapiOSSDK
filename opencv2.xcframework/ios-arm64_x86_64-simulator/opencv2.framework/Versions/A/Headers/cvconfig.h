@@ -28,6 +28,9 @@
 /* Clp support */
 /* #undef HAVE_CLP */
 
+/* Cocoa API */
+/* #undef HAVE_COCOA */
+
 /* NVIDIA CUDA Runtime API*/
 /* #undef HAVE_CUDA */
 
@@ -53,6 +56,12 @@
 /* Geospatial Data Abstraction Library */
 /* #undef HAVE_GDAL */
 
+/* GTK+ 2.0 Thread support */
+/* #undef HAVE_GTHREAD */
+
+/* GTK+ 2.x toolkit */
+/* #undef HAVE_GTK */
+
 /* Halide support */
 /* #undef HAVE_HALIDE */
 
@@ -72,11 +81,11 @@
 /* #undef HAVE_OPENJPEG */
 /* #undef HAVE_JASPER */
 
-/* AVIF codec */
-/* #undef HAVE_AVIF */
-
 /* IJG JPEG codec */
 #define HAVE_JPEG
+
+/* libpng/png.h needs to be included */
+/* #undef HAVE_LIBPNG_PNG_H */
 
 /* GDCM DICOM codec */
 /* #undef HAVE_GDCM */
@@ -106,14 +115,17 @@
 /* PNG codec */
 #define HAVE_PNG
 
-/* PNG codec */
-/* #undef HAVE_SPNG */
-
 /* Posix threads (pthreads) */
 #define HAVE_PTHREAD
 
 /* parallel_for with pthreads */
 #define HAVE_PTHREADS_PF
+
+/* Qt support */
+/* #undef HAVE_QT */
+
+/* Qt OpenGL support */
+/* #undef HAVE_QT_OPENGL */
 
 /* Intel Threading Building Blocks */
 /* #undef HAVE_TBB */
@@ -123,6 +135,9 @@
 
 /* TIFF codec */
 /* #undef HAVE_TIFF */
+
+/* Win32 UI */
+/* #undef HAVE_WIN32UI */
 
 /* Define if your processor stores words with the most significant byte
    first (like Motorola and SPARC, unlike Intel and VAX). */
@@ -147,6 +162,6 @@
 #define OPENCV_TRACE
 
 /* Library QR-code decoding */
-/* #undef HAVE_QUIRC */
+#define HAVE_QUIRC
 
 #endif // OPENCV_CVCONFIG_H_INCLUDED

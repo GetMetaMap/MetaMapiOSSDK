@@ -449,16 +449,7 @@ CV_EXPORTS InputOutputArray noArray();
 
 /////////////////////////////////// MatAllocator //////////////////////////////////////
 
-/** @brief  Usage flags for allocator
-
- @warning  All flags except `USAGE_DEFAULT` are experimental.
-
- @warning  For the OpenCL allocator, `USAGE_ALLOCATE_SHARED_MEMORY` depends on
- OpenCV's optional, experimental integration with OpenCL SVM. To enable this
- integration, build OpenCV using the `WITH_OPENCL_SVM=ON` CMake option and, at
- runtime, call `cv::ocl::Context::getDefault().setUseSVM(true);` or similar
- code. Note that SVM is incompatible with OpenCL 1.x.
-*/
+//! Usage flags for allocator
 enum UMatUsageFlags
 {
     USAGE_DEFAULT = 0,
@@ -1018,7 +1009,7 @@ public:
     @param copyData Flag to specify whether the underlying data of the STL vector should be copied
     to (true) or shared with (false) the newly constructed matrix. When the data is copied, the
     allocated buffer is managed using Mat reference counting mechanism. While the data is shared,
-    the reference counter is NULL, and you should not deallocate the data until the matrix is
+    the reference counter is NULL, and you should not deallocate the data until the matrix is not
     destructed.
     */
     template<typename _Tp> explicit Mat(const std::vector<_Tp>& vec, bool copyData=false);
@@ -1197,14 +1188,14 @@ public:
     The method creates a square diagonal matrix from specified main diagonal.
     @param d One-dimensional matrix that represents the main diagonal.
      */
-    CV_NODISCARD_STD static Mat diag(const Mat& d);
+    static Mat diag(const Mat& d);
 
     /** @brief Creates a full copy of the array and the underlying data.
 
     The method creates a full copy of the array. The original step[] is not taken into account. So, the
     array copy is a continuous array occupying total()*elemSize() bytes.
      */
-    CV_NODISCARD_STD Mat clone() const;
+    Mat clone() const CV_NODISCARD;
 
     /** @brief Copies the matrix to another one.
 
@@ -1289,36 +1280,15 @@ public:
                              t(); // finally, transpose the Nx3 matrix.
                                   // This involves copying all the elements
     @endcode
-    3-channel 2x2 matrix reshaped to 1-channel 4x3 matrix, each column has values from one of original channels:
-    @code
-    Mat m(Size(2, 2), CV_8UC3, Scalar(1, 2, 3));
-    vector<int> new_shape {4, 3};
-    m = m.reshape(1, new_shape);
-    @endcode
-    or:
-    @code
-    Mat m(Size(2, 2), CV_8UC3, Scalar(1, 2, 3));
-    const int new_shape[] = {4, 3};
-    m = m.reshape(1, 2, new_shape);
-    @endcode
     @param cn New number of channels. If the parameter is 0, the number of channels remains the same.
     @param rows New number of rows. If the parameter is 0, the number of rows remains the same.
      */
     Mat reshape(int cn, int rows=0) const;
 
-    /** @overload
-     * @param cn New number of channels. If the parameter is 0, the number of channels remains the same.
-     * @param newndims New number of dimentions.
-     * @param newsz Array with new matrix size by all dimentions. If some sizes are zero,
-     * the original sizes in those dimensions are presumed.
-     */
+    /** @overload */
     Mat reshape(int cn, int newndims, const int* newsz) const;
 
-    /** @overload
-     * @param cn New number of channels. If the parameter is 0, the number of channels remains the same.
-     * @param newshape Vector with new matrix size by all dimentions. If some sizes are zero,
-     * the original sizes in those dimensions are presumed.
-     */
+    /** @overload */
     Mat reshape(int cn, const std::vector<int>& newshape) const;
 
     /** @brief Transposes a matrix.
@@ -1389,20 +1359,20 @@ public:
     @param cols Number of columns.
     @param type Created matrix type.
      */
-    CV_NODISCARD_STD static MatExpr zeros(int rows, int cols, int type);
+    static MatExpr zeros(int rows, int cols, int type);
 
     /** @overload
     @param size Alternative to the matrix size specification Size(cols, rows) .
     @param type Created matrix type.
     */
-    CV_NODISCARD_STD static MatExpr zeros(Size size, int type);
+    static MatExpr zeros(Size size, int type);
 
     /** @overload
     @param ndims Array dimensionality.
     @param sz Array of integers specifying the array shape.
     @param type Created matrix type.
     */
-    CV_NODISCARD_STD static MatExpr zeros(int ndims, const int* sz, int type);
+    static MatExpr zeros(int ndims, const int* sz, int type);
 
     /** @brief Returns an array of all 1's of the specified size and type.
 
@@ -1420,20 +1390,20 @@ public:
     @param cols Number of columns.
     @param type Created matrix type.
      */
-    CV_NODISCARD_STD static MatExpr ones(int rows, int cols, int type);
+    static MatExpr ones(int rows, int cols, int type);
 
     /** @overload
     @param size Alternative to the matrix size specification Size(cols, rows) .
     @param type Created matrix type.
     */
-    CV_NODISCARD_STD static MatExpr ones(Size size, int type);
+    static MatExpr ones(Size size, int type);
 
     /** @overload
     @param ndims Array dimensionality.
     @param sz Array of integers specifying the array shape.
     @param type Created matrix type.
     */
-    CV_NODISCARD_STD static MatExpr ones(int ndims, const int* sz, int type);
+    static MatExpr ones(int ndims, const int* sz, int type);
 
     /** @brief Returns an identity matrix of the specified size and type.
 
@@ -1449,13 +1419,13 @@ public:
     @param cols Number of columns.
     @param type Created matrix type.
      */
-    CV_NODISCARD_STD static MatExpr eye(int rows, int cols, int type);
+    static MatExpr eye(int rows, int cols, int type);
 
     /** @overload
     @param size Alternative matrix size specification as Size(cols, rows) .
     @param type Created matrix type.
     */
-    CV_NODISCARD_STD static MatExpr eye(Size size, int type);
+    static MatExpr eye(Size size, int type);
 
     /** @brief Allocates new array data if needed.
 
@@ -2041,11 +2011,6 @@ public:
     template<typename _Tp> MatIterator_<_Tp> begin();
     template<typename _Tp> MatConstIterator_<_Tp> begin() const;
 
-    /** @brief Same as begin() but for inverse traversal
-     */
-    template<typename _Tp> std::reverse_iterator<MatIterator_<_Tp>> rbegin();
-    template<typename _Tp> std::reverse_iterator<MatConstIterator_<_Tp>> rbegin() const;
-
     /** @brief Returns the matrix iterator and sets it to the after-last matrix element.
 
     The methods return the matrix read-only or read-write iterators, set to the point following the last
@@ -2053,12 +2018,6 @@ public:
      */
     template<typename _Tp> MatIterator_<_Tp> end();
     template<typename _Tp> MatConstIterator_<_Tp> end() const;
-
-    /** @brief Same as end() but for inverse traversal
-     */
-    template<typename _Tp> std::reverse_iterator< MatIterator_<_Tp>> rend();
-    template<typename _Tp> std::reverse_iterator< MatConstIterator_<_Tp>> rend() const;
-
 
     /** @brief Runs the given functor over all matrix elements in parallel.
 
@@ -2107,7 +2066,7 @@ public:
 
         Mat_<Pixel> image = Mat::zeros(3, sizes, CV_8UC3);
 
-        image.forEach<Pixel>([](Pixel& pixel, const int position[]) -> void {
+        image.forEach<Pixel>([&](Pixel& pixel, const int position[]) -> void {
             pixel.x = position[0];
             pixel.y = position[1];
             pixel.z = position[2];
@@ -2291,13 +2250,7 @@ public:
     const_iterator begin() const;
     const_iterator end() const;
 
-    //reverse iterators
-    std::reverse_iterator<iterator> rbegin();
-    std::reverse_iterator<iterator> rend();
-    std::reverse_iterator<const_iterator> rbegin() const;
-    std::reverse_iterator<const_iterator> rend() const;
-
-    //! template methods for operation over all matrix elements.
+    //! template methods for for operation over all matrix elements.
     // the operations take care of skipping gaps in the end of rows (if any)
     template<typename Functor> void forEach(const Functor& operation);
     template<typename Functor> void forEach(const Functor& operation) const;
@@ -2318,7 +2271,7 @@ public:
     Mat_ row(int y) const;
     Mat_ col(int x) const;
     Mat_ diag(int d=0) const;
-    CV_NODISCARD_STD Mat_ clone() const;
+    Mat_ clone() const CV_NODISCARD;
 
     //! overridden forms of Mat::elemSize() etc.
     size_t elemSize() const;
@@ -2331,14 +2284,14 @@ public:
     size_t stepT(int i=0) const;
 
     //! overridden forms of Mat::zeros() etc. Data type is omitted, of course
-    CV_NODISCARD_STD static MatExpr zeros(int rows, int cols);
-    CV_NODISCARD_STD static MatExpr zeros(Size size);
-    CV_NODISCARD_STD static MatExpr zeros(int _ndims, const int* _sizes);
-    CV_NODISCARD_STD static MatExpr ones(int rows, int cols);
-    CV_NODISCARD_STD static MatExpr ones(Size size);
-    CV_NODISCARD_STD static MatExpr ones(int _ndims, const int* _sizes);
-    CV_NODISCARD_STD static MatExpr eye(int rows, int cols);
-    CV_NODISCARD_STD static MatExpr eye(Size size);
+    static MatExpr zeros(int rows, int cols);
+    static MatExpr zeros(Size size);
+    static MatExpr zeros(int _ndims, const int* _sizes);
+    static MatExpr ones(int rows, int cols);
+    static MatExpr ones(Size size);
+    static MatExpr ones(int _ndims, const int* _sizes);
+    static MatExpr eye(int rows, int cols);
+    static MatExpr eye(Size size);
 
     //! some more overridden methods
     Mat_& adjustROI( int dtop, int dbottom, int dleft, int dright );
@@ -2481,11 +2434,10 @@ public:
     //!  <0 - a diagonal from the lower half)
     UMat diag(int d=0) const;
     //! constructs a square diagonal matrix which main diagonal is vector "d"
-    CV_NODISCARD_STD static UMat diag(const UMat& d, UMatUsageFlags usageFlags /*= USAGE_DEFAULT*/);
-    CV_NODISCARD_STD static UMat diag(const UMat& d) { return diag(d, USAGE_DEFAULT); }  // OpenCV 5.0: remove abi compatibility overload
+    static UMat diag(const UMat& d);
 
     //! returns deep copy of the matrix, i.e. the data is copied
-    CV_NODISCARD_STD UMat clone() const;
+    UMat clone() const CV_NODISCARD;
     //! copies the matrix content to "m".
     // It calls m.create(this->size(), this->type()).
     void copyTo( OutputArray m ) const;
@@ -2516,22 +2468,14 @@ public:
     double dot(InputArray m) const;
 
     //! Matlab-style matrix initialization
-    CV_NODISCARD_STD static UMat zeros(int rows, int cols, int type, UMatUsageFlags usageFlags /*= USAGE_DEFAULT*/);
-    CV_NODISCARD_STD static UMat zeros(Size size, int type, UMatUsageFlags usageFlags /*= USAGE_DEFAULT*/);
-    CV_NODISCARD_STD static UMat zeros(int ndims, const int* sz, int type, UMatUsageFlags usageFlags /*= USAGE_DEFAULT*/);
-    CV_NODISCARD_STD static UMat zeros(int rows, int cols, int type) { return zeros(rows, cols, type, USAGE_DEFAULT); }  // OpenCV 5.0: remove abi compatibility overload
-    CV_NODISCARD_STD static UMat zeros(Size size, int type) { return zeros(size, type, USAGE_DEFAULT); }  // OpenCV 5.0: remove abi compatibility overload
-    CV_NODISCARD_STD static UMat zeros(int ndims, const int* sz, int type) { return zeros(ndims, sz, type, USAGE_DEFAULT); }  // OpenCV 5.0: remove abi compatibility overload
-    CV_NODISCARD_STD static UMat ones(int rows, int cols, int type, UMatUsageFlags usageFlags /*= USAGE_DEFAULT*/);
-    CV_NODISCARD_STD static UMat ones(Size size, int type, UMatUsageFlags usageFlags /*= USAGE_DEFAULT*/);
-    CV_NODISCARD_STD static UMat ones(int ndims, const int* sz, int type, UMatUsageFlags usageFlags /*= USAGE_DEFAULT*/);
-    CV_NODISCARD_STD static UMat ones(int rows, int cols, int type) { return ones(rows, cols, type, USAGE_DEFAULT); }  // OpenCV 5.0: remove abi compatibility overload
-    CV_NODISCARD_STD static UMat ones(Size size, int type) { return ones(size, type, USAGE_DEFAULT); }  // OpenCV 5.0: remove abi compatibility overload
-    CV_NODISCARD_STD static UMat ones(int ndims, const int* sz, int type) { return ones(ndims, sz, type, USAGE_DEFAULT); }  // OpenCV 5.0: remove abi compatibility overload
-    CV_NODISCARD_STD static UMat eye(int rows, int cols, int type, UMatUsageFlags usageFlags /*= USAGE_DEFAULT*/);
-    CV_NODISCARD_STD static UMat eye(Size size, int type, UMatUsageFlags usageFlags /*= USAGE_DEFAULT*/);
-    CV_NODISCARD_STD static UMat eye(int rows, int cols, int type) { return eye(rows, cols, type, USAGE_DEFAULT); }  // OpenCV 5.0: remove abi compatibility overload
-    CV_NODISCARD_STD static UMat eye(Size size, int type) { return eye(size, type, USAGE_DEFAULT); }  // OpenCV 5.0: remove abi compatibility overload
+    static UMat zeros(int rows, int cols, int type);
+    static UMat zeros(Size size, int type);
+    static UMat zeros(int ndims, const int* sz, int type);
+    static UMat ones(int rows, int cols, int type);
+    static UMat ones(Size size, int type);
+    static UMat ones(int ndims, const int* sz, int type);
+    static UMat eye(int rows, int cols, int type);
+    static UMat eye(Size size, int type);
 
     //! allocates new matrix data unless the matrix already has specified size and type.
     // previous data is unreferenced if needed.
@@ -2611,38 +2555,27 @@ public:
          - number of channels
      */
     int flags;
-
     //! the matrix dimensionality, >= 2
     int dims;
-
-    //! number of rows in the matrix; -1 when the matrix has more than 2 dimensions
-    int rows;
-
-    //! number of columns in the matrix; -1 when the matrix has more than 2 dimensions
-    int cols;
+    //! the number of rows and columns or (-1, -1) when the matrix has more than 2 dimensions
+    int rows, cols;
 
     //! custom allocator
     MatAllocator* allocator;
-
-    //! usage flags for allocator; recommend do not set directly, instead set during construct/create/getUMat
-    UMatUsageFlags usageFlags;
-
+    UMatUsageFlags usageFlags; // usage flags for allocator
     //! and the standard allocator
     static MatAllocator* getStdAllocator();
 
     //! internal use method: updates the continuity flag
     void updateContinuityFlag();
 
-    //! black-box container of UMat data
+    // black-box container of UMat data
     UMatData* u;
 
-    //! offset of the submatrix (or 0)
+    // offset of the submatrix (or 0)
     size_t offset;
 
-    //! dimensional size of the matrix; accessible in various formats
     MatSize size;
-
-    //! number of bytes each matrix element/row/plane/dimension occupies
     MatStep step;
 
 protected:
@@ -2797,7 +2730,7 @@ public:
     SparseMat& operator = (const Mat& m);
 
     //! creates full copy of the matrix
-    CV_NODISCARD_STD SparseMat clone() const;
+    SparseMat clone() const CV_NODISCARD;
 
     //! copies all the data to the destination matrix. All the previous content of m is erased
     void copyTo( SparseMat& m ) const;
@@ -3034,7 +2967,7 @@ public:
     SparseMat_& operator = (const Mat& m);
 
     //! makes full copy of the matrix. All the elements are duplicated
-    CV_NODISCARD_STD SparseMat_ clone() const;
+    SparseMat_ clone() const CV_NODISCARD;
     //! equivalent to cv::SparseMat::create(dims, _sizes, DataType<_Tp>::type)
     void create(int dims, const int* _sizes);
     //! converts sparse matrix to the old-style CvSparseMat. All the elements are copied

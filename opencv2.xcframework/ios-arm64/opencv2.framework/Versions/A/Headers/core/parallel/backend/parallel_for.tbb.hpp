@@ -38,7 +38,7 @@ static tbb::task_scheduler_init& getScheduler()
 }
 #endif
 
-/** TBB parallel_for API implementation
+/** OpenMP parallel_for API implementation
  *
  * @sa setParallelForBackend
  * @ingroup core_parallel_backend
