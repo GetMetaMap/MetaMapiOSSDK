@@ -63268,7 +63268,7 @@
       "kind": "StringLiteral",
       "offset": 191,
       "length": 8,
-      "value": "\"3.23.7\""
+      "value": "\"3.23.8\""
     },
     {
       "filePath": "\/Users\/avo\/Documents\/ios-framework\/mati-kyc-sdk\/supportFiles\/configs\/MatiConfig.swift",
@@ -63281,34 +63281,34 @@
       "filePath": "\/Users\/avo\/Documents\/ios-framework\/mati-kyc-sdk\/supportFiles\/configs\/MatiConfig.swift",
       "kind": "BooleanLiteral",
       "offset": 273,
-      "length": 4,
-      "value": "true"
+      "length": 5,
+      "value": "false"
     },
     {
       "filePath": "\/Users\/avo\/Documents\/ios-framework\/mati-kyc-sdk\/supportFiles\/configs\/MatiConfig.swift",
       "kind": "BooleanLiteral",
-      "offset": 308,
-      "length": 4,
-      "value": "true"
+      "offset": 309,
+      "length": 5,
+      "value": "false"
     },
     {
       "filePath": "\/Users\/avo\/Documents\/ios-framework\/mati-kyc-sdk\/supportFiles\/configs\/MatiConfig.swift",
       "kind": "StringLiteral",
-      "offset": 350,
+      "offset": 352,
       "length": 82,
       "value": "\"https:\/\/af8a47c7ee5040af9b12025ddf490040@o566293.ingest.MetaMapSentry.io\/5708998\""
     },
     {
       "filePath": "\/Users\/avo\/Documents\/ios-framework\/mati-kyc-sdk\/supportFiles\/configs\/MatiConfig.swift",
       "kind": "StringLiteral",
-      "offset": 476,
+      "offset": 478,
       "length": 36,
       "value": "\"https:\/\/getmati.com\/termsofservice\""
     },
     {
       "filePath": "\/Users\/avo\/Documents\/ios-framework\/mati-kyc-sdk\/supportFiles\/configs\/MatiConfig.swift",
       "kind": "StringLiteral",
-      "offset": 550,
+      "offset": 552,
       "length": 35,
       "value": "\"https:\/\/getmati.com\/privacypolicy\""
     },
